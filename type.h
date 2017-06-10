@@ -25,6 +25,7 @@ enum TYPE
 	BASE_TYPE_FALSE,
 	BASE_TYPE_DOUBLE,
 	BASE_TYPE_STRING,
+	BASE_TYPE_SYMBOL,
 	BASE_TYPE_CONS,
 
 	BASE_PROCEDURE_ADD,
@@ -46,6 +47,8 @@ enum TYPE
 	BASE_PROCEDURE_CDR,
 	BASE_PROCEDURE_ISNULL,
 	BASE_PROCEDURE_ISPAIR,
+	BASE_PROCEDURE_ISSYMBOL,
+	BASE_PROCEDURE_ISEQ,
 
 };
 
@@ -96,6 +99,20 @@ public:
 		double value_double;
 	}u;
 
+};
+
+class Type_Symbol :public Type
+{
+public:
+	Type_Symbol(std::string symbol) :Type(BASE_TYPE_SYMBOL),symbol(symbol){}
+	std::string symbol;
+};
+
+class Type_String :public Type
+{
+public:
+	Type_String(std::string str) :Type(BASE_TYPE_STRING),str(str){}
+	std::string str;
 };
 
 class Type_BaseProcedureApply :public Type //基本过程apply --> + - * / ...

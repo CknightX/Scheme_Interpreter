@@ -11,6 +11,7 @@ class Parser
 {
 public:
 	Parser() :root(nullptr){}
+	Parser(const Lexer& lexer) :lexer(lexer){}
 	Parser(const std::string& source) :lexer(source){}
 	Type* get_one_ast(){ return deal_expression(); }
 	std::vector<Type*> get_all_ast();

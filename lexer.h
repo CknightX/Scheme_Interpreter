@@ -4,7 +4,7 @@
 #include<vector>
 
 /*´Ê·¨·ÖÎöÆ÷*/
-
+enum STATUS {START,LEFT_BRACKET,RIGHT_BRACKET,KEY,SYMBOL,STRING};
 class Lexer
 {
 public:
@@ -18,6 +18,7 @@ public:
 	void put_formal_token(){ is_go_next = false; }
 
 	bool is_end;
+	STATUS status;
 private:
 	size_t index;
 	std::string curr_token;

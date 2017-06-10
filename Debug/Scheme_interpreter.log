@@ -1,0 +1,19 @@
+﻿生成启动时间为 2017/6/10 17:20:35。
+     1>项目“D:\Projects\c++\Scheme_interpreter\Scheme_interpreter\Scheme_interpreter.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt eval.cpp
+         eval.cpp
+     1>d:\projects\c++\scheme_interpreter\scheme_interpreter\eval.cpp(202): warning C4715: “Eval::eval_base_procedure”: 不是所有的控件路径都返回值
+     1>d:\projects\c++\scheme_interpreter\scheme_interpreter\eval.cpp(609): warning C4715: “Eval::convert_base_type”: 不是所有的控件路径都返回值
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Projects\c++\Scheme_interpreter\Debug\Scheme_interpreter.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Projects\c++\Scheme_interpreter\Debug\Scheme_interpreter.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Projects\c++\Scheme_interpreter\Debug\Scheme_interpreter.lib" /MACHINE:X86 Debug\env.obj
+         Debug\lexer.obj
+         Debug\main.obj
+         Debug\parser.obj
+         Debug\eval.obj
+         Scheme_interpreter.vcxproj -> D:\Projects\c++\Scheme_interpreter\Debug\Scheme_interpreter.exe
+     1>已完成生成项目“D:\Projects\c++\Scheme_interpreter\Scheme_interpreter\Scheme_interpreter.vcxproj”(Build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:03.88

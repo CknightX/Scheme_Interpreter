@@ -27,12 +27,16 @@ Type* Eval::eval(Type* type, Env* env)
 	case IF:
 		result = eval_if(type, env);
 		break;
+
 	case BASE_TYPE_DOUBLE:
 	case BASE_TYPE_CONS:
+	case BASE_TYPE_SYMBOL:
+	case BASE_TYPE_STRING:
 	case BASE_TYPE_TRUE:
 	case BASE_TYPE_FALSE:
 		result = eval_base_type(type, env);
 		break;
+
 	case BASE_PROCEDURE_ADD:
 	case BASE_PROCEDURE_SUB:
 	case BASE_PROCEDURE_MUL:
@@ -52,6 +56,8 @@ Type* Eval::eval(Type* type, Env* env)
 	case BASE_PROCEDURE_CDR:
 	case BASE_PROCEDURE_ISNULL:
 	case BASE_PROCEDURE_ISPAIR:
+	case BASE_PROCEDURE_ISSYMBOL:
+	//case BASE_PROCEDURE_ISEQyy:
 		result = eval_base_procedure(type, env);
 		break;
 	}
@@ -80,6 +86,7 @@ Type* Eval::eval_apply(Type* type, Env* env)
 	auto apply_body = static_cast<Type_Apply*>(type);
 	auto procedure = static_cast<Type_Procedure*>(eval(apply_body->procedure,env));
 
+	// base_procedure 求值
 	switch (procedure->type_info)
 	{
 	case BASE_PROCEDURE_ADD:
@@ -101,12 +108,17 @@ Type* Eval::eval_apply(Type* type, Env* env)
 	case BASE_PROCEDURE_CDR:
 	case BASE_PROCEDURE_ISNULL:
 	case BASE_PROCEDURE_ISPAIR:
+	case BASE_PROCEDURE_ISSYMBOL:
+	case BASE_PROCEDURE_ISEQ:
 		Type* _procedure = procedure;
 		auto base_apply = static_cast<Type_BaseProcedureApply*>(_procedure);
 		base_apply->parms = value_parms;
 		return eval(base_apply, env);
 		break;
 	}
+	//---------------------
+
+	// common procedure 求值
 	auto curr_env = new Env(procedure->parms, value_parms, procedure->outer_env);
 	return eval(procedure->body, curr_env);
 }
@@ -179,6 +191,12 @@ Type* Eval::eval_base_procedure(Type* type, Env* env)
 		break;
 	case BASE_PROCEDURE_ISPAIR:
 		return eval_base_procedure_is_pair(base_procedure, env);
+		break;
+	case BASE_PROCEDURE_ISSYMBOL:
+		return eval_base_procedure_is_symbol(base_procedure, env);
+		break;
+	case BASE_PROCEDURE_ISEQ:
+		return eval_base_procedure_is_eq(base_procedure, env);
 		break;
 	}
 }
@@ -464,10 +482,36 @@ Type* Eval::eval_base_procedure_is_pair(Type_BaseProcedureApply* base_procedure,
 {
 	if (base_procedure->parms.size() != 1)
 		throw "pair? need 1 parms!";
-	if (base_procedure->parms[0]->type_info == BASE_TYPE_CONS)
+	if (base_procedure->parms[0]&& base_procedure->parms[0]->type_info == BASE_TYPE_CONS)
 		return new Type_True;
 	else
 		return new Type_False;
+}
+Type* Eval::eval_base_procedure_is_symbol(Type_BaseProcedureApply* base_procedure, Env* env)
+{
+	if (base_procedure->parms.size() != 1)
+		throw "pair? need 1 parms!";
+	if (base_procedure->parms[0]&&base_procedure->parms[0]->type_info == BASE_TYPE_SYMBOL)
+		return new Type_True;
+	else
+		return new Type_False;
+}
+
+Type* Eval::eval_base_procedure_is_eq(Type_BaseProcedureApply* base_procedure, Env* env)
+{
+	if (base_procedure->parms.size() != 2)
+		throw "pair? need 2 parms!";
+	if (base_procedure->parms[0] && base_procedure->parms[1])
+	{
+		if (base_procedure->parms[0]->type_info == BASE_TYPE_SYMBOL&&base_procedure->parms[1]->type_info == BASE_TYPE_SYMBOL)
+		{
+			auto first = static_cast<Type_Symbol*>((base_procedure->parms[0]));
+			auto second = static_cast<Type_Symbol*>((base_procedure->parms[1]));
+			if (first->symbol == second->symbol)
+				return new Type_True;
+		}
+	}
+	return new Type_False;
 }
 
 /*输出基本类型*/
@@ -543,6 +587,18 @@ std::string Eval::convert_base_type(Type* _type)
 		ss >> tmp;
 		return tmp;
 		break;
+	case BASE_TYPE_SYMBOL:
+	{
+		auto type = static_cast<Type_Symbol*> (_type);
+		return type->symbol;
+		break;
+	}
+	case BASE_TYPE_STRING:
+	{
+		auto type = static_cast<Type_String*> (_type);
+		return "\""+type->str+"\"";
+		break;
+	}
 	case BASE_TYPE_TRUE:
 		return "#t";
 		break;
@@ -560,6 +616,8 @@ std::string Eval::convert_scheme2str(Type* type)
 	switch (type->type_info)
 	{
 	case BASE_TYPE_DOUBLE:
+	case BASE_TYPE_SYMBOL:
+	case BASE_TYPE_STRING:
 	case BASE_TYPE_TRUE:
 	case BASE_TYPE_FALSE:
 		return convert_base_type(type);
@@ -598,6 +656,8 @@ void Eval::create_base_env()
 
 	base_env->env["null?"] = new Type_BaseProcedureApply(BASE_PROCEDURE_ISNULL);
 	base_env->env["pair?"] = new Type_BaseProcedureApply(BASE_PROCEDURE_ISPAIR);
+	base_env->env["symbol?"] = new Type_BaseProcedureApply(BASE_PROCEDURE_ISSYMBOL);
+	base_env->env["eq?"] = new Type_BaseProcedureApply(BASE_PROCEDURE_ISEQ);
 	//base_env->env["eq?"] = new Type_BaseProcedureApply(BASE_PROCEDURE_ISEQ);
 	//base_env->env["symbol?"] = new Type_BaseProcedureApply(BASE_PROCEDURE_ISNULL);
 }

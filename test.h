@@ -24,14 +24,14 @@
 
 
 //cons实现1
-#define CODE6 "(define cond (lambda (x y) (lambda (m) (m x y))))(define car (lambda (x) (x (lambda(m n) m))))(define cdr (lambda (x) (x (lambda(m n) n)))) (car (cond 1 2)) (cdr (cond 1 2))"  // 1 2
+#define CODE6 "(define cons (lambda (x y) (lambda (m) (m x y))))(define car (lambda (x) (x (lambda(m n) m))))(define cdr (lambda (x) (x (lambda(m n) n)))) (car (cons 1 2)) (cdr (cons 1 2))"  // 1 2
 
 //cons实现2
-#define CODE7 "(define cond (lambda (x y) (lambda (m) (if (= m 0) x y))))\
-					(define car(lambda(z) (z 0)))\
-					(define cdr(lambda(z) (z 1)))\
-					(car(cond 1 2))\
-		   			(cdr(cond 1 2))" // 1 2																																																																																					   																								   				   ";
+#define CODE7 "(define cons (lambda (x y) (lambda (m) (if (= m 0) x y))))\
+					(define car (lambda(z) (z 0)))\
+					(define cdr (lambda(z) (z 1)))\
+					(car (cons 1 2))\
+		   			(cdr (cons 1 2))" // 1 2																																																																																					   																								   				   ";
 
 #define CODE8 "(list (cons (list 1 2) (cons 3 4)) (list (cons 1 2) (cons 3 4)))" //list cons 输出测试
 

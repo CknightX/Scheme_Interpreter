@@ -34,7 +34,16 @@ Type* Parser::deal_expression()
 	std::string str = lexer.get_next_token();
 	if (lexer.is_end)
 		return result;
-	if (str[0] == '(')
+	if (lexer.status == SYMBOL)
+	{
+		if (str != "(")
+			result = new Type_Symbol(str);
+	}
+	else if (lexer.status == STRING)
+	{
+		result = new Type_String(str);
+	}
+	else if (lexer.status==LEFT_BRACKET)
 	{
 		str = lexer.get_next_token();
 		if (str == "define")
